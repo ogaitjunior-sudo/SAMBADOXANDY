@@ -23,6 +23,8 @@ describe("Index page", () => {
     expect(screen.getByRole("heading", { name: /^marcus felipe$/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /^jhon batera$/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /^paulo santana$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^tiago reis$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^ricardo godoy$/i })).toBeInTheDocument();
     expect(screen.getAllByAltText(/a raiz t[aá] no sert[aã]o/i).length).toBeGreaterThan(0);
     expect(heroVideo).toBeInTheDocument();
     expect(featuredVideo).toBeInTheDocument();
@@ -41,34 +43,27 @@ describe("Index page", () => {
     await waitFor(() => {
       expect(screen.getByText(/a raiz t[aá] no sert[aã]o \(ao vivo\)/i)).toBeInTheDocument();
     });
+
     expect(screen.getByText(/festa de outubro 2023/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /show \| euclides da cunha/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /ao vivo em euclides da cunha/i })).toBeInTheDocument();
     expect(screen.getByText(/pagode é sentimento/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /baixar cd/i })).toHaveAttribute(
-      "href",
-      "/downloads/samba-do-xandy-a-raiz-ta-no-sertao-ao-vivo.zip",
-    );
+    expect(screen.getByText(/álbum ao vivo/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/show ao vivo/i).length).toBeGreaterThanOrEqual(2);
     expect(
       screen
-        .getAllByRole("link", { name: /baixar show/i })
+        .getAllByRole("link", { name: /baixar cd/i })
         .map((link) => link.getAttribute("href")),
-    ).toEqual(
-      expect.arrayContaining([
-        "/downloads/samba-do-xandy-ao-vivo-na-festa-de-outubro-2023-ribeira-do-pombal-ba.zip",
-        "/downloads/samba-do-xandy-ao-vivo-em-euclides-da-cunha.zip",
-      ]),
-    );
-    expect(screen.getAllByRole("link", { name: /baixar show/i })).toHaveLength(2);
-
-    expect(screen.getAllByRole("link", { name: /baixar show/i })[0]).toHaveAttribute(
-      "href",
-      "/downloads/samba-do-xandy-ao-vivo-na-festa-de-outubro-2023-ribeira-do-pombal-ba.zip",
-    );
+    ).toEqual([
+      "https://suamusica.com.br/SambadoXandy/samba-do-xandy-a-raiz-ta-no-sertao-ao-vivo",
+      "https://suamusica.com.br/SambadoXandy/samba-do-xandy-ao-vivo-na-festa-de-outubro-2023-ribeira-do-pombal-ba",
+      "https://suamusica.com.br/SambadoXandy/samba-do-xandy-ao-vivo-em-euclides-da-cunha",
+    ]);
 
     fireEvent.click(screen.getByRole("tab", { name: /integrantes/i }));
 
-    expect(screen.getByText(/voz principal/i)).toBeInTheDocument();
-    expect(screen.getByText(/voz e percus/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /xandy godoy/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /\+ seguir perfil/i })).toBeInTheDocument();
+    expect(screen.getAllByText(/voz e percus/i).length).toBeGreaterThanOrEqual(2);
 
     const marcusCard = screen.getByRole("heading", { name: /marcus felipe/i }).closest("article");
 
@@ -95,6 +90,29 @@ describe("Index page", () => {
     ).toHaveAttribute("href", "https://www.instagram.com/srpauloficial/");
 
     const showcase = document.getElementById("artist-showcase");
+    const tiagoCard = screen.getByRole("heading", { name: /tiago reis/i }).closest("article");
+
+    expect(tiagoCard).not.toBeNull();
+    expect(within(tiagoCard as HTMLElement).getByText(/^cavaquinho$/i)).toBeInTheDocument();
+    expect(
+      within(tiagoCard as HTMLElement).getByRole("link", { name: /instagram/i }),
+    ).toHaveAttribute("href", "https://www.instagram.com/ogaitjunior/");
+
+    const ricardoCard = screen.getByRole("heading", { name: /ricardo godoy/i }).closest("article");
+
+    expect(ricardoCard).not.toBeNull();
+    expect(within(ricardoCard as HTMLElement).getByText(/voz e percuss/i)).toBeInTheDocument();
+    expect(
+      within(ricardoCard as HTMLElement).getByRole("link", { name: /instagram/i }),
+    ).toHaveAttribute("href", "https://www.instagram.com/ricardolemos1977/");
+
+    const leoCard = screen.getByRole("heading", { name: /léo lapa/i }).closest("article");
+
+    expect(leoCard).not.toBeNull();
+    expect(within(leoCard as HTMLElement).getByText(/produção e percussão/i)).toBeInTheDocument();
+    expect(
+      within(leoCard as HTMLElement).getByRole("link", { name: /instagram/i }),
+    ).toHaveAttribute("href", "https://www.instagram.com/lapa5482?igsh=YjU5czhqMnF0d2ps");
 
     expect(showcase).not.toBeNull();
     expect(within(showcase as HTMLElement).queryByRole("link", { name: /contato/i })).not.toBeInTheDocument();
